@@ -8,9 +8,11 @@
 - 統合実装仕様の作成済み
 - P0 セットアップ実装済み（Vite + TypeScript + CI + スケルトンレイヤ）
 - P1 Core Loop 実装済み（FSM/クリックロック/UI同期/Final文言消失）
+- P2 Visual Build 実装済み（VFXパラメータ適用/背景語彙レイヤー/品質ラダー）
 - `npm audit` 対応済み（脆弱性 0 件）
 - ベースラインチェック通過（`lint`, `test`, `build`）
 - P1受け入れテスト通過（1クリック1遷移、連打スキップ防止、Final固定、チップ数一致）
+- Q3-Q0品質ラダーのUnit Test実装済み
 
 ## 仕様
 実装の正本（Single Source of Truth）は次のファイルです。
@@ -55,7 +57,6 @@
 ```
 
 ## 次のステップ
-1. P2として、PixiJSのVFX（noise/blur/glitch/whiteout）をレベル別固定値まで実装する
-2. EyeDropper + フォールバックパイプラインを実装する
-3. Playwrightで静止比較（Lv1-Lv9-Final）とフォールバック同等性テストを実装する
-4. パフォーマンス品質段階（Q3-Q0）とクロスブラウザ挙動を調整する
+1. P3として、EyeDropper + フォールバックパイプラインを実装する
+2. Playwrightで静止比較（Lv1-Lv9-Final）とフォールバック同等性テストを実装する
+3. iOS/Safari向けの軽量化と互換性調整を行う

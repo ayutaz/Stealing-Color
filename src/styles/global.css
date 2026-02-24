@@ -31,6 +31,94 @@ body {
   position: absolute;
   inset: 0;
   z-index: 1;
+  background: #090a0d;
+  overflow: hidden;
+  transition:
+    background var(--vfx-transition-ms, 320ms) linear,
+    transform 90ms linear;
+}
+
+.layer-vfx canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.vfx-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  transition:
+    filter var(--vfx-transition-ms, 320ms) ease,
+    opacity var(--vfx-transition-ms, 320ms) ease;
+}
+
+.vfx-noise,
+.vfx-chromatic,
+.vfx-vignette,
+.vfx-ghost,
+.vfx-final {
+  position: absolute;
+  inset: 0;
+}
+
+.vfx-noise {
+  opacity: 0;
+  mix-blend-mode: soft-light;
+  background-image:
+    radial-gradient(circle at 14% 22%, rgba(255, 255, 255, 0.35) 1px, transparent 1.5px),
+    radial-gradient(circle at 66% 74%, rgba(255, 255, 255, 0.24) 1px, transparent 1.4px),
+    radial-gradient(circle at 81% 35%, rgba(255, 255, 255, 0.2) 1px, transparent 1.5px);
+  background-size:
+    4px 4px,
+    3px 3px,
+    5px 5px;
+  animation: vfx-noise-shift 110ms steps(2) infinite;
+}
+
+.vfx-chromatic {
+  opacity: 0;
+  mix-blend-mode: screen;
+  background-image:
+    linear-gradient(95deg, rgba(255, 36, 91, 0.24), transparent 42%),
+    linear-gradient(275deg, rgba(58, 122, 255, 0.26), transparent 46%);
+  transform: translate3d(0, 0, 0);
+}
+
+.vfx-vignette {
+  opacity: 0.2;
+  background: radial-gradient(circle at 50% 50%, transparent 44%, rgba(0, 0, 0, 0.8) 100%);
+}
+
+.vfx-ghost {
+  opacity: 0;
+  transition: opacity var(--vfx-transition-ms, 320ms) ease;
+}
+
+.vfx-word {
+  position: absolute;
+  color: rgba(22, 28, 41, 0.85);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  text-shadow: 0 0 16px rgba(0, 0, 0, 0.35);
+}
+
+.vfx-final {
+  opacity: 0;
+  display: grid;
+  place-items: center;
+  color: rgba(230, 236, 255, 0.8);
+  font-size: clamp(42px, 8vw, 124px);
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-shadow:
+    -2px 0 0 rgba(255, 50, 50, 0.45),
+    2px 0 0 rgba(40, 100, 255, 0.45),
+    0 0 36px rgba(255, 255, 255, 0.34);
+  transition: opacity var(--vfx-transition-ms, 320ms) ease;
 }
 
 .layer-ui {
@@ -165,4 +253,16 @@ body {
   transition:
     opacity var(--level-transition-ms) ease,
     color var(--level-transition-ms) ease;
+}
+
+@keyframes vfx-noise-shift {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-2px, 1px);
+  }
+  100% {
+    transform: translate(1px, -1px);
+  }
 }

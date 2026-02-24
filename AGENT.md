@@ -15,7 +15,11 @@
 - 逐次状態遷移（Intro -> Final）
 - `clickLockMs` による連打ガード
 - Finalでのボタン文言消失
-3. 未完了は P2 以降（VFX本実装、入力フォールバック、E2E、互換性調整）。
+3. P2 Visual Build は完了。
+- レベル別 `effects` 固定値のVFX反映（noise/blur/glitch/whiteout 等）
+- 背景語彙レイヤーと `THE COLORS FREE` レイヤー実装
+- Q3-Q0 品質ラダーによる自動降格
+4. 未完了は P3 以降（入力フォールバック、E2E、互換性調整）。
 
 ## プロダクト上の必須ルール
 1. 状態遷移フローは次を厳守すること。

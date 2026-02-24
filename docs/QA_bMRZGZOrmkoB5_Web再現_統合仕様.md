@@ -1,7 +1,7 @@
-# QA_bMRZGZOrmkoB5 Web再現 統合仕様（実装反映版 v4）
+# QA_bMRZGZOrmkoB5 Web再現 統合仕様（実装反映版 v5）
 
 更新日: 2026-02-25  
-適用範囲: Web実装（P1実装済み）  
+適用範囲: Web実装（P2実装済み）  
 本書の位置づけ: 以下3文書（現在は削除済み）を統合し、矛盾を解消した最新版
 - `docs/QA_bMRZGZOrmkoB5_Web再現_技術調査.md`
 - `docs/QA_bMRZGZOrmkoB5_Web再現_レベル別パラメータ表.md`
@@ -48,17 +48,20 @@
  - StateMachine / LevelConfig（固定値反映）
  - ProgressionController（1クリック=1遷移 + clickLock）
  - Finalでのボタン文言消失
+ - レベル別VFX反映（noise/blur/glitch/whiteout/particle等）
+ - 背景語彙レイヤー + `THE COLORS FREE` レイヤー
+ - Q3-Q0品質ラダー（FPSベース自動降格）
 - 検証済み:
  - `npm run lint` 成功
  - `npm run test` 成功
  - `npm run build` 成功
  - `npm audit` 0 vulnerabilities
  - 動的テスト4項目（状態進行/連打/Final固定/チップ数一致）をUnit Testで実装
+ - 品質ラダー（Q3-Q0）のUnit Testを実装
 - 未実装:
  - EyeDropper + フォールバック連携
  - Playwright静止/動的E2E
  - フォールバック同等性テスト
- - VFXの仕様忠実度引き上げ（Lv別演出の本実装）
 
 ---
 
@@ -253,6 +256,9 @@
 - [x] `transitionMs` が全状態で500ms以下
 - [x] アイコンとテキストの分離実装方針を採用
 - [x] 動的QAテスト4項目を実装（状態進行/連打/Final固定/チップ数）
+- [x] VFXパラメータ（7.2）を実装へ反映
+- [x] 背景語彙と `THE COLORS FREE` レイヤーを実装
+- [x] 品質ラダー（Q3-Q0）を実装
 - [ ] EyeDropperフォールバック同等性を実装で担保
 
 ---
