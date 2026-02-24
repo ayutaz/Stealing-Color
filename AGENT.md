@@ -24,7 +24,12 @@
 - 取得色のチップ反映（クリック座標を使ったサンプリング）
 - iOS/Safari向け `liteVfxMode`（VFX強度・アニメーション負荷を軽減）
 - `colorPickPipeline` / `deviceProfile` のUnit Test実装
-5. 未完了は P4-P5（Playwright E2E、静止比較、自動RC判定）。
+5. P4 QA Hardening は完了。
+- Playwright静止比較（Lv1-Lv9-Final）
+- E2E動的テスト5本（Q01-Q05）
+- パフォーマンス計測スクリプト（`npm run perf:measure`）
+- a11y対応（`prefers-reduced-motion` / `prefers-contrast`）
+6. 未完了は P5（RC判定、自動化最終調整）。
 
 ## プロダクト上の必須ルール
 1. 状態遷移フローは次を厳守すること。
@@ -58,8 +63,8 @@
 5. フォールバック時の等価性
 
 現状:
-- 1-4 は Unit Test で実装済み
-- 5 は Unit Test で実装済み（P4でE2E同等性検証を追加予定）
+- 1-5 は Unit Test で実装済み
+- 1-5 は E2E（Playwright）でも実装済み
 
 ## リポジトリ運用ルール
 1. 実装変更前:

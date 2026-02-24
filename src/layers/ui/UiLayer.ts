@@ -52,14 +52,20 @@ export class UiLayer {
 
   public init(): void {
     this.panel.className = 'ui-panel';
+    this.panel.setAttribute('data-testid', 'ui-panel');
     this.title.className = 'ui-title';
+    this.title.setAttribute('data-testid', 'ui-title');
     this.titleIcon.className = 'ui-title-icon';
     this.titleText.className = 'ui-title-text';
     this.primaryButton.className = 'ui-primary';
+    this.primaryButton.setAttribute('data-testid', 'ui-primary');
     this.buttonIcon.className = 'ui-button-icon';
     this.buttonText.className = 'ui-button-text';
     this.chipRow.className = 'ui-chips';
+    this.chipRow.setAttribute('data-testid', 'ui-chips');
     this.status.className = 'ui-status';
+    this.status.setAttribute('data-testid', 'ui-status');
+    this.status.setAttribute('aria-live', 'polite');
 
     this.primaryButton.type = 'button';
 
@@ -93,6 +99,10 @@ export class UiLayer {
     this.buttonIcon.textContent = BUTTON_ICON_MAP[level.buttonIcon];
     this.buttonText.textContent = level.buttonText;
     this.buttonText.hidden = level.buttonText.trim().length === 0;
+    this.primaryButton.setAttribute(
+      'aria-label',
+      level.buttonText.trim().length > 0 ? level.buttonText : '色を盗む'
+    );
     this.primaryButton.classList.toggle('is-empty', this.buttonText.hidden);
     this.primaryButton.style.width = `${level.ui.width}px`;
     this.primaryButton.style.height = `${level.ui.height}px`;
@@ -126,11 +136,12 @@ export class UiLayer {
     secondRow.className = 'ui-chip-row ui-chip-row-second';
 
     level.chips.slice(0, CHIP_FIRST_ROW_LIMIT).forEach((chip, index) => {
-      firstRow.append(this.createChip(chip, chipColorOverrides[index]));
+      firstRow.append(this.createChip(chip, chipColorOverrides[index], index));
     });
 
     level.chips.slice(CHIP_FIRST_ROW_LIMIT).forEach((chip, index) => {
-      secondRow.append(this.createChip(chip, chipColorOverrides[index + CHIP_FIRST_ROW_LIMIT]));
+      const absoluteIndex = index + CHIP_FIRST_ROW_LIMIT;
+      secondRow.append(this.createChip(chip, chipColorOverrides[absoluteIndex], absoluteIndex));
     });
 
     const rows: Node[] = [firstRow];
@@ -141,9 +152,11 @@ export class UiLayer {
     this.chipRow.replaceChildren(...rows);
   }
 
-  private createChip(chip: ChipToken, overrideColor?: string): HTMLElement {
+  private createChip(chip: ChipToken, overrideColor: string | undefined, chipIndex: number): HTMLElement {
     const chipElement = document.createElement('span');
     chipElement.className = 'ui-chip';
+    chipElement.setAttribute('data-testid', 'ui-chip');
+    chipElement.setAttribute('data-chip-index', `${chipIndex}`);
     chipElement.style.background = this.resolveChipColor(chip, overrideColor);
     return chipElement;
   }

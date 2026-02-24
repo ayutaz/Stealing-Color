@@ -42,19 +42,22 @@ export class ColorPickPipeline {
   private readonly eyeDropper: EyeDropperPort;
   private readonly canvasSampler: CanvasSamplerPort;
   private readonly inputColor: InputColorPort;
+  private readonly disableEyeDropper: boolean;
 
   public constructor(options: {
     eyeDropper?: EyeDropperPort;
     canvasSampler?: CanvasSamplerPort;
     inputColor?: InputColorPort;
+    disableEyeDropper?: boolean;
   } = {}) {
     this.eyeDropper = options.eyeDropper ?? new BrowserEyeDropperPort();
     this.canvasSampler = options.canvasSampler ?? new CanvasGradientSampler();
     this.inputColor = options.inputColor ?? new InputColorPortImpl();
+    this.disableEyeDropper = options.disableEyeDropper ?? false;
   }
 
   public async pickColor(context: ColorPickContext): Promise<ColorPickResult> {
-    if (this.eyeDropper.isSupported()) {
+    if (!this.disableEyeDropper && this.eyeDropper.isSupported()) {
       try {
         const eyeDropperHex = await this.eyeDropper.pick();
         return {

@@ -96,4 +96,33 @@ describe('ColorPickPipeline', () => {
     expect(canvasSampler.sample).toHaveBeenCalledTimes(1);
     expect(inputColor.pick).toHaveBeenCalledTimes(1);
   });
+
+  test('skips EyeDropper when disabled by runtime flag', async () => {
+    const eyeDropper = {
+      isSupported: () => true,
+      pick: vi.fn<() => Promise<string>>().mockResolvedValue('#112233')
+    };
+    const canvasSampler = {
+      sample: vi.fn(() => '#ABCDEF')
+    };
+    const inputColor = {
+      pick: vi.fn<() => Promise<string>>().mockResolvedValue('#778899')
+    };
+
+    const pipeline = new ColorPickPipeline({
+      eyeDropper,
+      canvasSampler,
+      inputColor,
+      disableEyeDropper: true
+    });
+
+    const result = await pipeline.pickColor(BASE_CONTEXT);
+
+    expect(result).toEqual<ColorPickResult>({
+      hex: '#ABCDEF',
+      source: 'canvas'
+    });
+    expect(eyeDropper.pick).not.toHaveBeenCalled();
+    expect(canvasSampler.sample).toHaveBeenCalledTimes(1);
+  });
 });

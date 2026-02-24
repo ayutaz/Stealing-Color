@@ -10,13 +10,17 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "test:e2e:update": "playwright test --update-snapshots",
+    "perf:measure": "node scripts/measure-performance.mjs"
   },
   "dependencies": {
     "pixi.js": "^8.13.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.38.0",
+    "@playwright/test": "^1.58.2",
     "@types/node": "^24.7.2",
     "eslint": "^10.0.2",
     "eslint-config-prettier": "^10.1.8",
