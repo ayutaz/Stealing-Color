@@ -9,7 +9,7 @@
 
 明示的な指示がない限り、分割仕様を再導入しないでください。
 
-## 現在の実装ステータス（2026-02-25）
+## 現在の実装ステータス（2026-02-24）
 1. P0 は完了。
 2. P1 Core Loop は完了。
 - 逐次状態遷移（Intro -> Final）
@@ -19,7 +19,12 @@
 - レベル別 `effects` 固定値のVFX反映（noise/blur/glitch/whiteout 等）
 - 背景語彙レイヤーと `THE COLORS FREE` レイヤー実装
 - Q3-Q0 品質ラダーによる自動降格
-4. 未完了は P3 以降（入力フォールバック、E2E、互換性調整）。
+4. P3 Input/Compat は完了。
+- 色取得3段フォールバック（EyeDropper -> Canvas sampling -> `input[type=color]`）
+- 取得色のチップ反映（クリック座標を使ったサンプリング）
+- iOS/Safari向け `liteVfxMode`（VFX強度・アニメーション負荷を軽減）
+- `colorPickPipeline` / `deviceProfile` のUnit Test実装
+5. 未完了は P4-P5（Playwright E2E、静止比較、自動RC判定）。
 
 ## プロダクト上の必須ルール
 1. 状態遷移フローは次を厳守すること。
@@ -54,7 +59,7 @@
 
 現状:
 - 1-4 は Unit Test で実装済み
-- 5 は未実装（P3/P4で対応）
+- 5 は Unit Test で実装済み（P4でE2E同等性検証を追加予定）
 
 ## リポジトリ運用ルール
 1. 実装変更前:

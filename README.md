@@ -14,7 +14,7 @@
 - ベースラインチェック通過（`lint`, `test`, `build`）
 - P1受け入れテスト通過（1クリック1遷移、連打スキップ防止、Final固定、チップ数一致）
 - Q3-Q0品質ラダーのUnit Test実装済み
-- フォールバック同等性と互換判定（P3）のUnit Test実装済み
+- フォールバックパイプラインと互換判定（P3）のUnit Test実装済み
 
 ## 仕様
 実装の正本（Single Source of Truth）は次のファイルです。
@@ -51,6 +51,7 @@
 |   `-- QA_bMRZGZOrmkoB5_実装ロードマップ_タスク一覧.md
 |-- src/
 |   |-- app/
+|   |-- color/
 |   |-- core/
 |   |-- domain/
 |   |-- layers/
