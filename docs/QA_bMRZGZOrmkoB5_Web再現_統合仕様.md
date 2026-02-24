@@ -1,8 +1,8 @@
-# QA_bMRZGZOrmkoB5 Web再現 統合仕様（レビュー反映版 v2）
+# QA_bMRZGZOrmkoB5 Web再現 統合仕様（実装反映版 v3）
 
-更新日: 2026-02-24  
-適用範囲: Web実装（実装前仕様）  
-本書の位置づけ: 以下3文書を統合し、矛盾を解消した最新版
+更新日: 2026-02-25  
+適用範囲: Web実装（P0実装済み）  
+本書の位置づけ: 以下3文書（現在は削除済み）を統合し、矛盾を解消した最新版
 - `docs/QA_bMRZGZOrmkoB5_Web再現_技術調査.md`
 - `docs/QA_bMRZGZOrmkoB5_Web再現_レベル別パラメータ表.md`
 - `docs/QA_bMRZGZOrmkoB5_Web再現_技術調査レビュー_5agents.md`
@@ -38,6 +38,23 @@
 - `Intro -> Lv1 -> ... -> Lv9 -> Final` の逐次ステート遷移
 - 各レベルで背景/テキスト/UI色/チップ/ドクロ/VFXを同時更新
 - Finalで「白化 + 文字崩壊 + ボタン文字消失」を再現
+
+### 0.5 実装状況（2026-02-25時点）
+- 実装済み:
+ - Vite + TypeScript基盤
+ - ESLint/Prettier設定
+ - GitHub Actions（lint/test/build）
+ - UI層とVFX層の分離スケルトン
+ - StateMachineとLevelConfigの骨格
+- 検証済み:
+ - `npm run lint` 成功
+ - `npm run test` 成功
+ - `npm run build` 成功
+ - `npm audit` 0 vulnerabilities
+- 未実装:
+ - EyeDropper + フォールバック連携
+ - Playwright静止/動的E2E
+ - VFXの仕様忠実度引き上げ（Lv別演出の本実装）
 
 ---
 
@@ -219,13 +236,13 @@
 
 ---
 
-## 10. 実装前チェックリスト（着手条件）
+## 10. 実装チェックリスト（進捗）
 
-- [ ] チップ定義が10色順で全ドキュメント一致
-- [ ] `transitionMs` が全状態で500ms以下
-- [ ] アイコンとテキストの分離実装方針を採用
-- [ ] 動的QAテスト5項目を実装計画に含める
-- [ ] EyeDropperフォールバック同等性基準を受け入れる
+- [x] チップ定義が10色順で全ドキュメント一致
+- [x] `transitionMs` が全状態で500ms以下
+- [x] アイコンとテキストの分離実装方針を採用
+- [ ] 動的QAテスト5項目を実装
+- [ ] EyeDropperフォールバック同等性を実装で担保
 
 ---
 

@@ -6,6 +6,8 @@ Web reproduction project for `QA_bMRZGZOrmkoB5.mp4`.
 - Repository initialized
 - Unified implementation spec prepared
 - P0 setup implemented (Vite + TypeScript + CI + skeleton layers)
+- `npm audit` resolved (0 vulnerabilities)
+- Baseline checks passing (`lint`, `test`, `build`)
 
 ## Spec
 Use this file as the single source of truth:
