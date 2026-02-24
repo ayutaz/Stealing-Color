@@ -1,50 +1,49 @@
 # AGENT.md
 
-## Purpose
-This repository reproduces the interaction in `QA_bMRZGZOrmkoB5.mp4` as a web experience.
+## 目的
+このリポジトリは、`QA_bMRZGZOrmkoB5.mp4` のインタラクションを Web 体験として再現します。
 
-## Source of truth
-Use this document as the single implementation reference:
+## 正本ドキュメント
+実装の単一参照先（Single Source of Truth）は次のドキュメントです。
 - `docs/QA_bMRZGZOrmkoB5_Web再現_統合仕様.md`
 
-Do not reintroduce split specs unless explicitly requested.
+明示的な指示がない限り、分割仕様を再導入しないでください。
 
-## Non-negotiable product rules
-1. State flow must be strictly:
+## プロダクト上の必須ルール
+1. 状態遷移フローは次を厳守すること。
 `Intro -> Lv1 -> Lv2 -> Lv3 -> Lv4 -> Lv5 -> Lv6 -> Lv7 -> Lv8 -> Lv9 -> Final`
-2. Exactly one click advances exactly one state.
-3. Final state must keep:
-- whiteout peak
-- text collapse
-- button text removed
-4. Chip order must stay fixed:
+2. 1 クリックで必ず 1 状態のみ進むこと。
+3. Final 状態では次を維持すること。
+- 白飛びピーク
+- テキスト崩壊
+- ボタンテキストの消失
+4. チップ順序は次で固定すること。
 `red -> charcoal -> cyan -> pink -> yellow -> gray -> navy -> blue -> deep -> white`
 
-## Technical guardrails
-1. Keep architecture aligned with spec:
-- PixiJS for VFX
-- DOM for central UI
-- data-driven FSM via `LevelConfig`
-2. `transitionMs` must remain `<= 500` for all states.
-3. EyeDropper fallback chain must be preserved:
+## 技術ガードレール
+1. アーキテクチャは仕様に合わせること。
+- VFX は PixiJS を使用する
+- 中央 UI は DOM で実装する
+- 状態管理は `LevelConfig` によるデータ駆動 FSM とする
+2. 全状態で `transitionMs` は `<= 500` を維持すること。
+3. EyeDropper のフォールバック連鎖は維持すること。
 - EyeDropper
 - canvas pixel sampling
 - `input[type=color]`
-4. Fallback behavior must still satisfy `1 action = 1 state advance`.
+4. フォールバック時も `1 action = 1 state advance` を満たすこと。
 
-## QA guardrails
-Required test coverage (minimum):
-1. state progression per click
-2. no skip under rapid click
-3. final state is terminal
-4. chip count matches state
-5. fallback equivalence
+## QA ガードレール
+必要な最低テストカバレッジ:
+1. クリックごとの状態進行
+2. 連打時にスキップしないこと
+3. Final 状態が終端であること
+4. チップ数が状態と一致すること
+5. フォールバック時の等価性
 
-## Repo workflow
-1. Before implementation changes:
-- read `docs/QA_bMRZGZOrmkoB5_Web再現_統合仕様.md`
-2. If behavior changes:
-- update the unified spec in the same change set
-3. Keep commit scope small and traceable:
-- spec change and code change should be linked
-
+## リポジトリ運用ルール
+1. 実装変更前:
+- `docs/QA_bMRZGZOrmkoB5_Web再現_統合仕様.md` を読む
+2. 振る舞い変更時:
+- 同一変更セットで統合仕様を更新する
+3. コミット粒度は小さく追跡可能に保つ:
+- 仕様変更とコード変更を対応づける
