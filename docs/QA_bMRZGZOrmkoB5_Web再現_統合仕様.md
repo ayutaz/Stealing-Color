@@ -1,7 +1,7 @@
-# QA_bMRZGZOrmkoB5 Web再現 統合仕様（実装反映版 v3）
+# QA_bMRZGZOrmkoB5 Web再現 統合仕様（実装反映版 v4）
 
 更新日: 2026-02-25  
-適用範囲: Web実装（P0実装済み）  
+適用範囲: Web実装（P1実装済み）  
 本書の位置づけ: 以下3文書（現在は削除済み）を統合し、矛盾を解消した最新版
 - `docs/QA_bMRZGZOrmkoB5_Web再現_技術調査.md`
 - `docs/QA_bMRZGZOrmkoB5_Web再現_レベル別パラメータ表.md`
@@ -44,16 +44,20 @@
  - Vite + TypeScript基盤
  - ESLint/Prettier設定
  - GitHub Actions（lint/test/build）
- - UI層とVFX層の分離スケルトン
- - StateMachineとLevelConfigの骨格
+ - UI層とVFX層の分離
+ - StateMachine / LevelConfig（固定値反映）
+ - ProgressionController（1クリック=1遷移 + clickLock）
+ - Finalでのボタン文言消失
 - 検証済み:
  - `npm run lint` 成功
  - `npm run test` 成功
  - `npm run build` 成功
  - `npm audit` 0 vulnerabilities
+ - 動的テスト4項目（状態進行/連打/Final固定/チップ数一致）をUnit Testで実装
 - 未実装:
  - EyeDropper + フォールバック連携
  - Playwright静止/動的E2E
+ - フォールバック同等性テスト
  - VFXの仕様忠実度引き上げ（Lv別演出の本実装）
 
 ---
@@ -223,6 +227,13 @@
 - `test_fallback_equivalence`
  - EyeDropper無効時でも1操作=1進行を満たす
 
+実装進捗（2026-02-25）:
+- `test_state_progression_single_click`: 実装済み（Unit）
+- `test_no_skip_under_rapid_click`: 実装済み（Unit）
+- `test_final_stays_final`: 実装済み（Unit）
+- `test_chip_count_matches_state`: 実装済み（Unit）
+- `test_fallback_equivalence`: 未実装
+
 ---
 
 ## 9. パフォーマンス仕様
@@ -241,7 +252,7 @@
 - [x] チップ定義が10色順で全ドキュメント一致
 - [x] `transitionMs` が全状態で500ms以下
 - [x] アイコンとテキストの分離実装方針を採用
-- [ ] 動的QAテスト5項目を実装
+- [x] 動的QAテスト4項目を実装（状態進行/連打/Final固定/チップ数）
 - [ ] EyeDropperフォールバック同等性を実装で担保
 
 ---

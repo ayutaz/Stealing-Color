@@ -1,4 +1,4 @@
-import type { LevelConfig, TitleIcon } from '../../domain/levelConfig';
+import type { ButtonIcon, ChipToken, LevelConfig, TitleIcon } from '../../domain/levelConfig';
 import { CHIP_COLORS } from '../../domain/levelConfig';
 
 const TITLE_ICON_MAP: Record<TitleIcon, string> = {
@@ -8,6 +8,13 @@ const TITLE_ICON_MAP: Record<TitleIcon, string> = {
   skull: '💀',
   eye: '👁️'
 };
+
+const BUTTON_ICON_MAP: Record<ButtonIcon, string> = {
+  none: '',
+  eye: '👁️'
+};
+
+const CHIP_FIRST_ROW_LIMIT = 6;
 
 export class UiLayer {
   private readonly host: HTMLElement;
@@ -37,7 +44,11 @@ export class UiLayer {
   public init(): void {
     this.panel.className = 'ui-panel';
     this.title.className = 'ui-title';
+    this.titleIcon.className = 'ui-title-icon';
+    this.titleText.className = 'ui-title-text';
     this.primaryButton.className = 'ui-primary';
+    this.buttonIcon.className = 'ui-button-icon';
+    this.buttonText.className = 'ui-button-text';
     this.chipRow.className = 'ui-chips';
     this.status.className = 'ui-status';
 
@@ -50,18 +61,27 @@ export class UiLayer {
   }
 
   public setPrimaryAction(handler: () => void): void {
-    this.primaryButton.addEventListener('pointerdown', () => {
+    this.primaryButton.addEventListener('pointerdown', (event) => {
+      if (!event.isPrimary || event.button !== 0) {
+        return;
+      }
+
+      event.preventDefault();
       handler();
     });
   }
 
   public render(level: LevelConfig): void {
+    this.panel.style.setProperty('--level-transition-ms', `${level.transitionMs}ms`);
+
     this.titleIcon.textContent = TITLE_ICON_MAP[level.titleIcon];
     this.titleText.textContent = level.titleText;
-    this.title.hidden = level.titleText.length === 0;
+    this.title.hidden = level.titleText.trim().length === 0;
 
-    this.buttonIcon.textContent = level.buttonIcon === 'eye' ? '👁️' : '';
+    this.buttonIcon.textContent = BUTTON_ICON_MAP[level.buttonIcon];
     this.buttonText.textContent = level.buttonText;
+    this.buttonText.hidden = level.buttonText.trim().length === 0;
+    this.primaryButton.classList.toggle('is-empty', this.buttonText.hidden);
     this.primaryButton.style.width = `${level.ui.width}px`;
     this.primaryButton.style.height = `${level.ui.height}px`;
     this.primaryButton.style.borderRadius = `${level.ui.radius}px`;
@@ -69,17 +89,50 @@ export class UiLayer {
     this.primaryButton.style.borderColor = level.ui.border;
 
     this.renderChips(level);
-    this.status.textContent = `呪いレベル ${'💀'.repeat(level.curseSkulls)}`;
+    this.status.textContent = this.buildStatus(level.curseSkulls);
+  }
+
+  private buildStatus(curseSkulls: number): string {
+    if (curseSkulls === 0) {
+      return '呪いレベル';
+    }
+
+    return `呪いレベル ${'💀'.repeat(curseSkulls)}`;
   }
 
   private renderChips(level: LevelConfig): void {
-    this.chipRow.innerHTML = '';
+    if (level.chips.length === 0) {
+      this.chipRow.hidden = true;
+      this.chipRow.replaceChildren();
+      return;
+    }
 
-    level.chips.forEach((chip) => {
-      const chipElement = document.createElement('span');
-      chipElement.className = 'ui-chip';
-      chipElement.style.background = CHIP_COLORS[chip];
-      this.chipRow.append(chipElement);
+    this.chipRow.hidden = false;
+    const firstRow = document.createElement('div');
+    firstRow.className = 'ui-chip-row';
+    const secondRow = document.createElement('div');
+    secondRow.className = 'ui-chip-row ui-chip-row-second';
+
+    level.chips.slice(0, CHIP_FIRST_ROW_LIMIT).forEach((chip) => {
+      firstRow.append(this.createChip(chip));
     });
+
+    level.chips.slice(CHIP_FIRST_ROW_LIMIT).forEach((chip) => {
+      secondRow.append(this.createChip(chip));
+    });
+
+    const rows: Node[] = [firstRow];
+    if (secondRow.childElementCount > 0) {
+      rows.push(secondRow);
+    }
+
+    this.chipRow.replaceChildren(...rows);
+  }
+
+  private createChip(chip: ChipToken): HTMLElement {
+    const chipElement = document.createElement('span');
+    chipElement.className = 'ui-chip';
+    chipElement.style.background = CHIP_COLORS[chip];
+    return chipElement;
   }
 }

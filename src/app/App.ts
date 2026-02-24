@@ -1,17 +1,15 @@
-import { StateMachine } from '../core/stateMachine';
+import { ProgressionController } from '../core/progressionController';
 import { UiLayer } from '../layers/ui/UiLayer';
 import { VfxLayer } from '../layers/vfx/VfxLayer';
 
 export class App {
-  private readonly stateMachine = new StateMachine();
+  private readonly progressionController = new ProgressionController();
   private readonly scene: HTMLElement;
   private readonly vfxHost: HTMLElement;
   private readonly uiHost: HTMLElement;
   private readonly uiLayer: UiLayer;
   private readonly vfxLayer: VfxLayer;
   private readonly mountNode: HTMLElement;
-
-  private lockUntil = 0;
 
   public constructor(mountNode: HTMLElement) {
     this.mountNode = mountNode;
@@ -38,19 +36,15 @@ export class App {
   }
 
   private advanceState(): void {
-    const now = performance.now();
-    if (now < this.lockUntil) {
+    if (!this.progressionController.tryAdvance()) {
       return;
     }
 
-    const current = this.stateMachine.currentConfig;
-    this.lockUntil = now + current.clickLockMs;
-    this.stateMachine.advance();
     this.render();
   }
 
   private render(): void {
-    const level = this.stateMachine.currentConfig;
+    const level = this.progressionController.currentConfig;
     this.uiLayer.render(level);
     this.vfxLayer.render(level);
   }
