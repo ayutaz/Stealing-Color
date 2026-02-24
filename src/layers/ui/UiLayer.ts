@@ -16,6 +16,15 @@ const BUTTON_ICON_MAP: Record<ButtonIcon, string> = {
 
 const CHIP_FIRST_ROW_LIMIT = 6;
 
+export interface PrimaryActionContext {
+  clientX: number;
+  clientY: number;
+}
+
+export interface UiRenderOptions {
+  chipColorOverrides?: readonly string[];
+}
+
 export class UiLayer {
   private readonly host: HTMLElement;
   private readonly panel: HTMLElement;
@@ -60,18 +69,21 @@ export class UiLayer {
     this.host.append(this.panel);
   }
 
-  public setPrimaryAction(handler: () => void): void {
+  public setPrimaryAction(handler: (context: PrimaryActionContext) => void): void {
     this.primaryButton.addEventListener('pointerdown', (event) => {
       if (!event.isPrimary || event.button !== 0) {
         return;
       }
 
       event.preventDefault();
-      handler();
+      handler({
+        clientX: event.clientX,
+        clientY: event.clientY
+      });
     });
   }
 
-  public render(level: LevelConfig): void {
+  public render(level: LevelConfig, options: UiRenderOptions = {}): void {
     this.panel.style.setProperty('--level-transition-ms', `${level.transitionMs}ms`);
 
     this.titleIcon.textContent = TITLE_ICON_MAP[level.titleIcon];
@@ -88,7 +100,7 @@ export class UiLayer {
     this.primaryButton.style.background = level.ui.fill;
     this.primaryButton.style.borderColor = level.ui.border;
 
-    this.renderChips(level);
+    this.renderChips(level, options.chipColorOverrides);
     this.status.textContent = this.buildStatus(level.curseSkulls);
   }
 
@@ -100,7 +112,7 @@ export class UiLayer {
     return `呪いレベル ${'💀'.repeat(curseSkulls)}`;
   }
 
-  private renderChips(level: LevelConfig): void {
+  private renderChips(level: LevelConfig, chipColorOverrides: readonly string[] = []): void {
     if (level.chips.length === 0) {
       this.chipRow.hidden = true;
       this.chipRow.replaceChildren();
@@ -113,12 +125,12 @@ export class UiLayer {
     const secondRow = document.createElement('div');
     secondRow.className = 'ui-chip-row ui-chip-row-second';
 
-    level.chips.slice(0, CHIP_FIRST_ROW_LIMIT).forEach((chip) => {
-      firstRow.append(this.createChip(chip));
+    level.chips.slice(0, CHIP_FIRST_ROW_LIMIT).forEach((chip, index) => {
+      firstRow.append(this.createChip(chip, chipColorOverrides[index]));
     });
 
-    level.chips.slice(CHIP_FIRST_ROW_LIMIT).forEach((chip) => {
-      secondRow.append(this.createChip(chip));
+    level.chips.slice(CHIP_FIRST_ROW_LIMIT).forEach((chip, index) => {
+      secondRow.append(this.createChip(chip, chipColorOverrides[index + CHIP_FIRST_ROW_LIMIT]));
     });
 
     const rows: Node[] = [firstRow];
@@ -129,10 +141,18 @@ export class UiLayer {
     this.chipRow.replaceChildren(...rows);
   }
 
-  private createChip(chip: ChipToken): HTMLElement {
+  private createChip(chip: ChipToken, overrideColor?: string): HTMLElement {
     const chipElement = document.createElement('span');
     chipElement.className = 'ui-chip';
-    chipElement.style.background = CHIP_COLORS[chip];
+    chipElement.style.background = this.resolveChipColor(chip, overrideColor);
     return chipElement;
+  }
+
+  private resolveChipColor(chip: ChipToken, overrideColor?: string): string {
+    if (overrideColor && /^#[0-9a-fA-F]{6}$/.test(overrideColor)) {
+      return overrideColor;
+    }
+
+    return CHIP_COLORS[chip];
   }
 }

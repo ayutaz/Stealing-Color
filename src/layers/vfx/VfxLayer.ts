@@ -20,6 +20,10 @@ interface Particle {
 const MAX_PARTICLES = 64;
 const PARTICLE_COLORS = [0xf65a43, 0x56abe8, 0xf45d97, 0xf1d46c, 0x253bff, 0xf8faff];
 
+interface VfxLayerOptions {
+  liteMode?: boolean;
+}
+
 export class VfxLayer {
   private readonly host: HTMLElement;
   private readonly app: Application;
@@ -29,6 +33,7 @@ export class VfxLayer {
   private readonly blurFilter: BlurFilter;
   private readonly noiseFilter: NoiseFilter;
   private readonly qualityLadder: QualityLadder;
+  private readonly liteMode: boolean;
   private readonly overlayRoot: HTMLElement;
   private readonly noiseOverlay: HTMLElement;
   private readonly ghostOverlay: HTMLElement;
@@ -47,8 +52,9 @@ export class VfxLayer {
   private whiteoutWidth = 0;
   private whiteoutHeight = 0;
 
-  public constructor(host: HTMLElement) {
+  public constructor(host: HTMLElement, options: VfxLayerOptions = {}) {
     this.host = host;
+    this.liteMode = options.liteMode ?? false;
     this.app = new Application();
     this.root = new Container();
     this.particleLayer = new Container();
@@ -60,7 +66,10 @@ export class VfxLayer {
     this.noiseFilter = new NoiseFilter({
       noise: 0
     });
-    this.qualityLadder = new QualityLadder();
+    this.qualityLadder = new QualityLadder({
+      initialFps: this.liteMode ? 48 : 60,
+      sampleIntervalMs: this.liteMode ? 180 : 250
+    });
 
     this.overlayRoot = document.createElement('div');
     this.noiseOverlay = document.createElement('div');
@@ -78,6 +87,7 @@ export class VfxLayer {
     });
 
     this.host.classList.add('vfx-host');
+    this.host.classList.toggle('vfx-lite', this.liteMode);
     this.host.append(this.app.canvas);
 
     this.overlayRoot.className = 'vfx-overlay';
@@ -134,8 +144,10 @@ export class VfxLayer {
   }
 
   private updateFilters(effects: EffectConfig, deltaMs: number): void {
-    this.blurFilter.strength = effects.blurPx;
-    this.noiseFilter.noise = clamp(effects.noise, 0, 1);
+    const blurStrength = this.liteMode ? effects.blurPx * 0.72 : effects.blurPx;
+    const noiseStrength = this.liteMode ? effects.noise * 0.74 : effects.noise;
+    this.blurFilter.strength = blurStrength;
+    this.noiseFilter.noise = clamp(noiseStrength, 0, 1);
     this.noiseSeed = (this.noiseSeed + deltaMs * 0.00045) % 1;
     this.noiseFilter.seed = this.noiseSeed;
   }
@@ -143,7 +155,8 @@ export class VfxLayer {
   private updateParticles(effects: EffectConfig, deltaMs: number): void {
     const width = this.host.clientWidth || window.innerWidth;
     const height = this.host.clientHeight || window.innerHeight;
-    const targetCount = clampInt(Math.round(effects.particleRate), 0, MAX_PARTICLES);
+    const particleRate = this.liteMode ? effects.particleRate * 0.55 : effects.particleRate;
+    const targetCount = clampInt(Math.round(particleRate), 0, MAX_PARTICLES);
 
     this.ensureParticleCount(targetCount, width, height);
 
@@ -226,10 +239,12 @@ export class VfxLayer {
   }
 
   private updateOverlays(effects: EffectConfig, deltaMs: number, currentState: AppState): void {
-    this.noiseOverlay.style.opacity = `${clamp(effects.noise * 0.95, 0, 0.75)}`;
+    const noiseOpacity = this.liteMode ? effects.noise * 0.55 : effects.noise * 0.95;
+    const chromaticOpacity = this.liteMode ? effects.chromaticPx / 6.4 : effects.chromaticPx / 4.5;
+    this.noiseOverlay.style.opacity = `${clamp(noiseOpacity, 0, 0.75)}`;
     this.ghostOverlay.style.opacity = `${clamp(effects.ghostText, 0, 1)}`;
     this.vignetteOverlay.style.opacity = `${clamp(effects.vignette, 0, 0.95)}`;
-    this.chromaticOverlay.style.opacity = `${clamp(effects.chromaticPx / 4.5, 0, 0.8)}`;
+    this.chromaticOverlay.style.opacity = `${clamp(chromaticOpacity, 0, 0.8)}`;
     this.overlayRoot.style.filter = `saturate(${1 + effects.bloom})`;
 
     const visual = getFinalOverlayVisual(currentState);

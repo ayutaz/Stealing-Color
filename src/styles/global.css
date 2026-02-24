@@ -38,6 +38,10 @@ body {
     transform 90ms linear;
 }
 
+.layer-vfx.vfx-lite {
+  transition-duration: 180ms;
+}
+
 .layer-vfx canvas {
   width: 100%;
   height: 100%;
@@ -77,6 +81,10 @@ body {
   animation: vfx-noise-shift 110ms steps(2) infinite;
 }
 
+.layer-vfx.vfx-lite .vfx-noise {
+  animation-duration: 240ms;
+}
+
 .vfx-chromatic {
   opacity: 0;
   mix-blend-mode: screen;
@@ -84,6 +92,10 @@ body {
     linear-gradient(95deg, rgba(255, 36, 91, 0.24), transparent 42%),
     linear-gradient(275deg, rgba(58, 122, 255, 0.26), transparent 46%);
   transform: translate3d(0, 0, 0);
+}
+
+.layer-vfx.vfx-lite .vfx-chromatic {
+  mix-blend-mode: soft-light;
 }
 
 .vfx-vignette {
@@ -265,4 +277,16 @@ body {
   100% {
     transform: translate(1px, -1px);
   }
+}
+
+.color-fallback-input {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  inset: auto;
+  border: 0;
+  padding: 0;
+  margin: 0;
 }
