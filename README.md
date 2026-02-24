@@ -11,6 +11,9 @@ Web reproduction project for `QA_bMRZGZOrmkoB5.mp4`.
 Use this file as the single source of truth:
 - `docs/QA_bMRZGZOrmkoB5_Web再現_統合仕様.md`
 
+Implementation roadmap and task list:
+- `docs/QA_bMRZGZOrmkoB5_実装ロードマップ_タスク一覧.md`
+
 ## Goal
 Recreate the interactive loop where each click increases curse level and progressively degrades visuals/UI:
 - color progression
@@ -31,6 +34,7 @@ Recreate the interactive loop where each click increases curse level and progres
 |-- README.md
 |-- docs/
 |   `-- QA_bMRZGZOrmkoB5_Web再現_統合仕様.md
+|   `-- QA_bMRZGZOrmkoB5_実装ロードマップ_タスク一覧.md
 `-- .gitignore
 ```
 
@@ -39,4 +43,3 @@ Recreate the interactive loop where each click increases curse level and progres
 2. Implement `LevelConfig` and strict state machine.
 3. Build UI layer and VFX layer separately.
 4. Add required dynamic tests and screenshot tests.
-
