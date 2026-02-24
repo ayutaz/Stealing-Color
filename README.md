@@ -5,7 +5,7 @@ Web reproduction project for `QA_bMRZGZOrmkoB5.mp4`.
 ## Current status
 - Repository initialized
 - Unified implementation spec prepared
-- Implementation not started yet
+- P0 setup implemented (Vite + TypeScript + CI + skeleton layers)
 
 ## Spec
 Use this file as the single source of truth:
@@ -32,14 +32,25 @@ Recreate the interactive loop where each click increases curse level and progres
 .
 |-- AGENT.md
 |-- README.md
+|-- package.json
+|-- tsconfig.json
+|-- vite.config.ts
+|-- eslint.config.mjs
+|-- .github/workflows/ci.yml
 |-- docs/
 |   `-- QA_bMRZGZOrmkoB5_Web再現_統合仕様.md
 |   `-- QA_bMRZGZOrmkoB5_実装ロードマップ_タスク一覧.md
+|-- src/
+|   |-- app/
+|   |-- core/
+|   |-- domain/
+|   |-- layers/
+|   `-- styles/
 `-- .gitignore
 ```
 
 ## Next steps
-1. Bootstrap web app project (Vite + TypeScript).
-2. Implement `LevelConfig` and strict state machine.
-3. Build UI layer and VFX layer separately.
-4. Add required dynamic tests and screenshot tests.
+1. Expand Level-by-Level visual fidelity from skeleton to full match.
+2. Implement EyeDropper + fallback pipeline.
+3. Add dynamic QA tests listed in unified spec section 8.2.
+4. Tune performance ladder (Q3-Q0) and cross-browser behavior.
