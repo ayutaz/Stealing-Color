@@ -100,7 +100,7 @@ export class QualityLadder {
       return 'Q1';
     }
 
-    if (fps <= 55) {
+    if (fps < 55) {
       return 'Q2';
     }
 

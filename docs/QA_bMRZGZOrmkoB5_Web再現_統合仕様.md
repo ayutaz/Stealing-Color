@@ -236,6 +236,9 @@
 - `test_final_stays_final`: 実装済み（Unit）
 - `test_chip_count_matches_state`: 実装済み（Unit）
 - `test_fallback_equivalence`: 未実装
+- `test_vfx_lv9_final_activation`: 実装済み（Unit）
+- `test_whiteout_peak_at_final`: 実装済み（Unit）
+- `test_ghost_vocabulary_stage_diff`: 実装済み（Unit）
 
 ---
 
@@ -244,7 +247,7 @@
 | 品質 | 条件 | ルール |
 |---|---|---|
 | Q3 | 55fps以上 | 表の値を100%適用 |
-| Q2 | 45-55fps | `particleRate x0.75`, `blurPx x0.8` |
+| Q2 | 45fps以上55fps未満 | `particleRate x0.75`, `blurPx x0.8` |
 | Q1 | 30-45fps | `particleRate x0.5`, `blurPx x0.6`, `glitchHz x0.7` |
 | Q0 | 30fps未満 | 粒子停止、`ghostText x0.5`, `noise x0.6`, `whiteout`維持 |
 
@@ -259,6 +262,7 @@
 - [x] VFXパラメータ（7.2）を実装へ反映
 - [x] 背景語彙と `THE COLORS FREE` レイヤーを実装
 - [x] 品質ラダー（Q3-Q0）を実装
+- [x] P2視覚要件（Lv9/Final有効化、whiteout最大、語彙段階差）のUnit Testを実装
 - [ ] EyeDropperフォールバック同等性を実装で担保
 
 ---

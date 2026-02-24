@@ -3,6 +3,11 @@ import { Application, BlurFilter, Container, Graphics, NoiseFilter } from 'pixi.
 import { applyQualityTier, QualityLadder, type QualityTier } from '../../core/qualityLadder';
 import type { EffectConfig, LevelConfig } from '../../domain/levelConfig';
 import type { AppState } from '../../domain/state';
+import {
+  buildGhostWordCount,
+  getFinalOverlayVisual,
+  GHOST_WORDS_MAP
+} from './vfxNarrative';
 
 interface Particle {
   node: Graphics;
@@ -14,20 +19,6 @@ interface Particle {
 
 const MAX_PARTICLES = 64;
 const PARTICLE_COLORS = [0xf65a43, 0x56abe8, 0xf45d97, 0xf1d46c, 0x253bff, 0xf8faff];
-
-const GHOST_WORDS: Record<AppState, string[]> = {
-  Intro: [],
-  Lv1: [],
-  Lv2: ['もっと', '色泥棒'],
-  Lv3: ['やめられないだろ?', 'もっと', '呪い'],
-  Lv4: ['もう戻れない', '返せ', '色泥棒'],
-  Lv5: ['色を返', '呪', '返せ'],
-  Lv6: ['色を返せ', '返せ', '呪いレベル'],
-  Lv7: ['色泥棒', '返せ', '盗むな', '最悪'],
-  Lv8: ['返せ', '呪い', 'FREE?'],
-  Lv9: ['THE COLORS FREE', '返せ', '色泥棒', 'FREE'],
-  Final: ['THE COLORS FREE', 'FREE', '返せ']
-};
 
 export class VfxLayer {
   private readonly host: HTMLElement;
@@ -129,6 +120,7 @@ export class VfxLayer {
     if (!this.currentLevel) {
       return;
     }
+    const currentState = this.currentLevel.state;
 
     this.elapsedMs += deltaMs;
     const snapshot = this.qualityLadder.update(deltaMs);
@@ -138,7 +130,7 @@ export class VfxLayer {
     this.updateFilters(this.scaledEffects, deltaMs);
     this.updateParticles(this.scaledEffects, deltaMs);
     this.updateWhiteout(this.scaledEffects);
-    this.updateOverlays(this.scaledEffects, deltaMs);
+    this.updateOverlays(this.scaledEffects, deltaMs, currentState);
   }
 
   private updateFilters(effects: EffectConfig, deltaMs: number): void {
@@ -233,17 +225,16 @@ export class VfxLayer {
     this.whiteoutOverlay.alpha = clamp(effects.whiteout, 0, 1);
   }
 
-  private updateOverlays(effects: EffectConfig, deltaMs: number): void {
+  private updateOverlays(effects: EffectConfig, deltaMs: number, currentState: AppState): void {
     this.noiseOverlay.style.opacity = `${clamp(effects.noise * 0.95, 0, 0.75)}`;
     this.ghostOverlay.style.opacity = `${clamp(effects.ghostText, 0, 1)}`;
     this.vignetteOverlay.style.opacity = `${clamp(effects.vignette, 0, 0.95)}`;
     this.chromaticOverlay.style.opacity = `${clamp(effects.chromaticPx / 4.5, 0, 0.8)}`;
     this.overlayRoot.style.filter = `saturate(${1 + effects.bloom})`;
 
-    const isFinalPhase = this.currentLevel?.state === 'Lv9' || this.currentLevel?.state === 'Final';
-    const finalOpacity = !isFinalPhase ? 0 : this.currentLevel?.state === 'Final' ? 1 : 0.5;
-    this.finalOverlay.style.opacity = `${finalOpacity}`;
-    this.finalOverlay.style.mixBlendMode = this.currentLevel?.state === 'Final' ? 'screen' : 'overlay';
+    const visual = getFinalOverlayVisual(currentState);
+    this.finalOverlay.style.opacity = `${visual.opacity}`;
+    this.finalOverlay.style.mixBlendMode = visual.blendMode;
 
     this.glitchTickMs += deltaMs;
     const intervalMs = 1000 / Math.max(0.25, effects.glitchHz);
@@ -262,13 +253,12 @@ export class VfxLayer {
 
   private populateGhostWords(state: AppState, ghostIntensity: number): void {
     this.ghostOverlay.replaceChildren();
-    const words = GHOST_WORDS[state];
+    const words = GHOST_WORDS_MAP[state];
     if (words.length === 0) {
       return;
     }
 
-    const baseCount = Math.max(4, Math.round(ghostIntensity * 12));
-    const totalWords = Math.min(16, baseCount);
+    const totalWords = buildGhostWordCount(ghostIntensity);
 
     for (let index = 0; index < totalWords; index += 1) {
       const word = document.createElement('span');

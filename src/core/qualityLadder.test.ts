@@ -25,6 +25,17 @@ describe('QualityLadder', () => {
 
     expect(snapshot.tier).toBe('Q0');
   });
+
+  test('treats 55 fps as Q3 boundary', () => {
+    const ladder = new QualityLadder({
+      initialFps: 55,
+      sampleIntervalMs: 1
+    });
+
+    const snapshot = ladder.update(1000 / 55);
+
+    expect(snapshot.tier).toBe('Q3');
+  });
 });
 
 describe('applyQualityTier', () => {
