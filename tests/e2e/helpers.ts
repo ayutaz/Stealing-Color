@@ -20,6 +20,7 @@ interface RuntimeSnapshot {
   chipCount: number;
   lastPickSource: string | null;
   qualityTier: string;
+  actionInFlight: boolean;
 }
 
 export async function gotoApp(page: Page, query = 'sc_test=1'): Promise<void> {
@@ -49,7 +50,7 @@ export async function clickPrimaryAndWaitForAdvance(page: Page): Promise<void> {
   await page.waitForFunction(
     (targetIndex) => {
       const scene = document.querySelector<HTMLElement>('[data-testid="scene"]');
-      return scene?.dataset.stateIndex === String(targetIndex);
+      return scene?.dataset.stateIndex === String(targetIndex) && scene?.dataset.actionInFlight === '0';
     },
     before + 1
   );

@@ -14,6 +14,7 @@ declare global {
         chipCount: number;
         lastPickSource: string | null;
         qualityTier: string;
+        actionInFlight: boolean;
       };
     };
   }
@@ -114,6 +115,7 @@ export class App {
     this.scene.dataset.state = level.state;
     this.scene.dataset.stateIndex = `${this.progressionController.stateIndex}`;
     this.scene.dataset.chipCount = `${level.chips.length}`;
+    this.scene.dataset.actionInFlight = this.actionInFlight ? '1' : '0';
     if (!this.scene.dataset.lastPickSource) {
       this.scene.dataset.lastPickSource = 'none';
     }
@@ -132,7 +134,8 @@ export class App {
         stateIndex: this.progressionController.stateIndex,
         chipCount: this.progressionController.currentConfig.chips.length,
         lastPickSource: this.scene.dataset.lastPickSource ?? null,
-        qualityTier: this.vfxLayer.getQualityTier()
+        qualityTier: this.vfxLayer.getQualityTier(),
+        actionInFlight: this.actionInFlight
       })
     };
   }
