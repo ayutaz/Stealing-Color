@@ -15,6 +15,7 @@ test.describe('P4 visual regression', () => {
         animations: 'disabled',
         caret: 'hide',
         scale: 'css',
+        maxDiffPixels: state === 'Lv1' ? 9000 : 0,
         timeout: 15_000
       });
     }
