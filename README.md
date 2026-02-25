@@ -11,8 +11,9 @@
 - P2 Visual Build 実装済み（VFXパラメータ適用/背景語彙レイヤー/品質ラダー）
 - P3 Input/Compat 実装済み（EyeDropper + Canvas + `input[type=color]` フォールバック、iOS/Safari軽量化）
 - P4 QA Hardening 実装済み（Playwright静止比較/E2E動的5本/性能計測/a11y対応）
+- P5 RC 実装済み（クロスブラウザE2E、RCゲート自動判定、既知課題台帳運用）
 - `npm audit` 対応済み（脆弱性 0 件）
-- ベースラインチェック通過（`lint`, `test`, `build`, `test:e2e`）
+- ベースラインチェック通過（`lint`, `test`, `build`, `test:e2e`, `rc:check`）
 - P1受け入れテスト通過（1クリック1遷移、連打スキップ防止、Final固定、チップ数一致）
 - Q3-Q0品質ラダーのUnit Test実装済み
 - フォールバックパイプラインと互換判定（P3）のUnit Test実装済み
@@ -51,7 +52,9 @@
 |-- .github/workflows/ci.yml
 |-- scripts/
 |   `-- measure-performance.mjs
+|   `-- rc-check.mjs
 |-- docs/
+|   `-- known-issues.json
 |   `-- QA_bMRZGZOrmkoB5_Web再現_統合仕様.md
 |   `-- QA_bMRZGZOrmkoB5_実装ロードマップ_タスク一覧.md
 |-- src/
@@ -67,6 +70,5 @@
 ```
 
 ## 次のステップ
-1. P5として、既知課題の修正と微調整を進める
-2. P5として、RC判定基準に沿った最終レビューを実施する
-3. P5として、リリース候補の確定と運用手順を整理する
+1. 実機計測値（FPS/体験時間）を収集して `docs/known-issues.json` を継続更新する
+2. CIの `rc-gate` 結果を基準に、公開前の最終Go/No-Go判定を行う

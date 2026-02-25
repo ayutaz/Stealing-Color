@@ -9,7 +9,7 @@
 
 明示的な指示がない限り、分割仕様を再導入しないでください。
 
-## 現在の実装ステータス（2026-02-24）
+## 現在の実装ステータス（2026-02-25）
 1. P0 は完了。
 2. P1 Core Loop は完了。
 - 逐次状態遷移（Intro -> Final）
@@ -29,7 +29,11 @@
 - E2E動的テスト5本（Q01-Q05）
 - パフォーマンス計測スクリプト（`npm run perf:measure`）
 - a11y対応（`prefers-reduced-motion` / `prefers-contrast`）
-6. 未完了は P5（RC判定、自動化最終調整）。
+6. P5 RC は完了。
+- クロスブラウザE2E（chromium/firefox/webkit）をCI対象化
+- `npm run rc:check` によるRCゲート自動判定を実装
+- `docs/known-issues.json` で既知課題（High/Critical 0件）を判定
+7. 次フェーズは運用（実機計測と課題台帳更新）。
 
 ## プロダクト上の必須ルール
 1. 状態遷移フローは次を厳守すること。
@@ -65,6 +69,7 @@
 現状:
 - 1-5 は Unit Test で実装済み
 - 1-5 は E2E（Playwright）でも実装済み
+- RCゲート（lint/test/build/e2e/audit/perf + known issues）を実装済み
 
 ## リポジトリ運用ルール
 1. 実装変更前:

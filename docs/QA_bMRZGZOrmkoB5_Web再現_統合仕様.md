@@ -1,7 +1,7 @@
-# QA_bMRZGZOrmkoB5 Web再現 統合仕様（実装反映版 v7）
+# QA_bMRZGZOrmkoB5 Web再現 統合仕様（実装反映版 v8）
 
-更新日: 2026-02-24  
-適用範囲: Web実装（P4実装済み）  
+更新日: 2026-02-25  
+適用範囲: Web実装（P5実装済み）  
 本書の位置づけ: 以下3文書（現在は削除済み）を統合し、矛盾を解消した最新版
 - `docs/QA_bMRZGZOrmkoB5_Web再現_技術調査.md`
 - `docs/QA_bMRZGZOrmkoB5_Web再現_レベル別パラメータ表.md`
@@ -39,7 +39,7 @@
 - 各レベルで背景/テキスト/UI色/チップ/ドクロ/VFXを同時更新
 - Finalで「白化 + 文字崩壊 + ボタン文字消失」を再現
 
-### 0.5 実装状況（2026-02-24時点）
+### 0.5 実装状況（2026-02-25時点）
 - 実装済み:
  - Vite + TypeScript基盤
  - ESLint/Prettier設定
@@ -56,20 +56,24 @@
  - iOS/Safari向け `liteVfxMode`（VFX負荷軽減）
  - Playwright静止比較（Lv1-Lv9-Final）
  - E2E動的テスト5本（Q01-Q05）
+ - E2Eクロスブラウザ実行（chromium/firefox/webkit）
  - a11y対応（`prefers-reduced-motion` / `prefers-contrast`）
  - パフォーマンス計測スクリプト（`npm run perf:measure`）
+ - RCゲート自動化（`npm run rc:check`）
+ - 既知課題台帳（`docs/known-issues.json`）によるHigh/Critical件数判定
 - 検証済み:
  - `npm run lint` 成功
  - `npm run test` 成功
  - `npm run build` 成功
  - `npm run test:e2e` 成功
+ - `npm run rc:check` 成功
  - `npm audit` 0 vulnerabilities
  - 動的テスト4項目（状態進行/連打/Final固定/チップ数一致）をUnit Testで実装
  - 品質ラダー（Q3-Q0）のUnit Testを実装
  - フォールバックパイプライン優先順のUnit Testを実装
  - 端末プロファイル（iOS/Safari判定）のUnit Testを実装
 - 未実装:
- - P5向けのRC判定自動化と最終調整
+ - なし（運用フェーズ: 実機計測と課題台帳更新）
 
 ---
 
@@ -238,7 +242,7 @@
 - `test_fallback_equivalence`
  - EyeDropper無効時でも1操作=1進行を満たす
 
-実装進捗（2026-02-24）:
+実装進捗（2026-02-25）:
 - `test_state_progression_single_click`: 実装済み（Unit）
 - `test_no_skip_under_rapid_click`: 実装済み（Unit）
 - `test_final_stays_final`: 実装済み（Unit）
@@ -246,6 +250,7 @@
 - `test_fallback_equivalence`: 実装済み（Unit: `src/color/colorPickPipeline.test.ts`）
 - `test_fallback_equivalence_e2e`: 実装済み（Playwright: `tests/e2e/dynamic-flow.spec.ts`）
 - `test_visual_regression_lv1_to_final`: 実装済み（Playwright: `tests/e2e/visual-regression.spec.ts`）
+- `test_dynamic_cross_browser`: 実装済み（Playwright projects: chromium/firefox/webkit）
 - `test_vfx_lv9_final_activation`: 実装済み（Unit）
 - `test_whiteout_peak_at_final`: 実装済み（Unit）
 - `test_ghost_vocabulary_stage_diff`: 実装済み（Unit）
@@ -277,8 +282,11 @@
 - [x] iOS/Safari向け軽量VFXモードを実装
 - [x] Playwright静止比較（Lv1-Lv9-Final）を実装
 - [x] E2E動的テスト5本（Q01-Q05）を実装
+- [x] E2Eクロスブラウザ実行（chromium/firefox/webkit）を実装
 - [x] a11y対応（reduced-motion / contrast）を実装
 - [x] パフォーマンス計測スクリプト（T21）を実装
+- [x] RCゲート自動判定（`rc:check`）を実装
+- [x] 既知課題台帳（High/Critical 0件）でRC判定を実装
 
 ---
 
